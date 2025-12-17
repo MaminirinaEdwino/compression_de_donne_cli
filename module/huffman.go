@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"slices"
 	"sort"
+	"strconv"
 	"strings"
 )
 
@@ -13,12 +14,12 @@ type Symbole struct {
 	Codage string
 }
 type Noeud struct {
-	Symbole     Symbole
-	NoeudGauche *Noeud
-	NoeudDroite *Noeud
+	Symbole      Symbole
+	NoeudSuivant string
+	Cote         int
 }
 
-func Huffman(mot string) {
+func Huffman(mot string) string {
 	var symb []string
 	tab := strings.Split(mot, "")
 	var freqTab []Symbole
@@ -53,7 +54,6 @@ func Huffman(mot string) {
 	var usedNode []Noeud
 
 	for _, element := range freqTab {
-
 		originalNode = append(originalNode, Noeud{
 			Symbole: element,
 		})
@@ -61,17 +61,20 @@ func Huffman(mot string) {
 	arbreHuffman = originalNode
 	nbr := 0
 	for len(arbreHuffman) > 1 {
-		nbr += 2
-		usedNode = append(usedNode, arbreHuffman[len(arbreHuffman)-2])
-		usedNode = append(usedNode, arbreHuffman[len(arbreHuffman)-1])
+		nbr += 1
 
 		newNode := Noeud{
 			Symbole: Symbole{
+				Symb: strconv.Itoa(nbr),
 				Freq: arbreHuffman[len(arbreHuffman)-1].Symbole.Freq + arbreHuffman[len(arbreHuffman)-2].Symbole.Freq,
 			},
-			NoeudGauche: &usedNode[nbr-2],
-			NoeudDroite: &usedNode[nbr-1],
 		}
+		arbreHuffman[len(arbreHuffman)-2].NoeudSuivant = strconv.Itoa(nbr)
+		arbreHuffman[len(arbreHuffman)-2].Cote = 0
+		arbreHuffman[len(arbreHuffman)-1].NoeudSuivant = strconv.Itoa(nbr)
+		arbreHuffman[len(arbreHuffman)-1].Cote = 1
+		usedNode = append(usedNode, arbreHuffman[len(arbreHuffman)-2])
+		usedNode = append(usedNode, arbreHuffman[len(arbreHuffman)-1])
 
 		arbreHuffman = arbreHuffman[:len(arbreHuffman)-2]
 		arbreHuffman = append(arbreHuffman, newNode)
@@ -82,31 +85,60 @@ func Huffman(mot string) {
 	}
 	// fmt.Println(usedNode)
 
-	fmt.Println(arbreHuffman)
+	// fmt.Println(arbreHuffman)
 	racine := arbreHuffman[0]
 	usedNode = append(usedNode, racine)
-	for _, element := range usedNode{
-		fmt.Println(element)
-	}
-	
-	if usedNode[len(usedNode)-1].NoeudGauche != nil  {
-		getnodegauche(*usedNode[len(usedNode)-1].NoeudGauche)
-		getnodedroite(*usedNode[len(usedNode)-1].NoeudDroite)
+
+	// GetCodage(usedNode[2])
+	// fmt.Print(usedNode[1].Symbole.Symb)
+
+	var f = make(map[string]string)
+	for _, n := range usedNode {
+		if _, err := strconv.Atoi(n.Symbole.Symb); err != nil {
+			codage := ""
+			GetCodage(n, usedNode, &codage)
+			// fmt.Println("inv", codage)
+			realcode := ""
+			for i := len(codage); i > 0; i-- {
+				realcode += codage[i-1 : i]
+			}
+			// fmt.Println(n.Symbole.Symb, realcode)
+			f[n.Symbole.Symb] = realcode
+		}
 	}
 
-}
-func getnodegauche(n Noeud){
-	if n.NoeudGauche != nil {
-		fmt.Println(n.NoeudGauche.Symbole.Symb)
-		getnodegauche(*n.NoeudGauche)
-		getnodedroite(*n.NoeudDroite)
+	// file, err := os.OpenFile("compression.tay", os.O_CREATE|os.O_RDWR|os.O_TRUNC, 0644)
+	// if err != nil{
+	// 	panic(err)
+	// }
+
+	data := ""
+
+	for _, i := range tab {
+		fmt.Println(f[i])
+		data += f[i]
+
 	}
+
+	// fmt.Fprint(file, ".")
+	// for idx, i := range f {
+	// 	fmt.Fprintf(file, "%s%s",idx, i)
+	// }
+	return data
 }
-func getnodedroite(n Noeud){
-	if n.NoeudDroite != nil {
-		fmt.Println(n.NoeudDroite.Symbole.Symb)
-		getnodegauche(*n.NoeudGauche)
-		getnodedroite(*n.NoeudDroite)
+func GetCodage(element Noeud, usedNode []Noeud, codage *string) int {
+	if element.NoeudSuivant != "" {
+		// fmt.Println(element)
+		var suivant Noeud
+		for _, i := range usedNode {
+			if element.NoeudSuivant == i.Symbole.Symb {
+				// fmt.Print(element.Cote)
+				*codage += fmt.Sprintf("%d", element.Cote)
+				suivant = i
+				break
+			}
+		}
+		GetCodage(suivant, usedNode, codage)
 	}
-	
+	return element.Cote
 }

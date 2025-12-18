@@ -115,7 +115,7 @@ func Huffman(mot string) string {
 	data := ""
 
 	for _, i := range tab {
-		fmt.Println(f[i])
+		// fmt.Println(f[i])
 		data += f[i]
 
 	}
@@ -124,6 +124,7 @@ func Huffman(mot string) string {
 	// for idx, i := range f {
 	// 	fmt.Fprintf(file, "%s%s",idx, i)
 	// }
+	fmt.Println(data)
 	return data
 }
 func GetCodage(element Noeud, usedNode []Noeud, codage *string) int {

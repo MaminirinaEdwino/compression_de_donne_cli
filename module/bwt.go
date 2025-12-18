@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-func BWT(mot string) {
+func BWT(mot string) (string, int) {
 	tab := strings.Split(mot, "")
 	var result []string
 	var final string
@@ -35,6 +35,8 @@ func BWT(mot string) {
 		}
 	}
 	fmt.Println(final, idFinal+1)
+	
+	return final, idFinal+1
 }
 
 func tri(C2 []string) []string {

@@ -17,6 +17,8 @@ func main() {
 	decoderle := flag.Bool("decoderle", false, "decode rle")
 	bwtHuffman := flag.Bool("bwthuffman", false, "bwt huffman")
 	mot := flag.String("mot", "", "le mot a compressé")
+	readfile := flag.Bool("readfile", false, "read compressed file")
+	filename := flag.String("file", "", "filename")
 	flag.Parse()
 
 	file, err := os.Create("compression")
@@ -25,10 +27,23 @@ func main() {
 	}
 
 	switch {
+	case *readfile:
+		if *filename != ""{
+			file, err := os.ReadFile(*filename)
+			if err != nil {
+				panic(err)
+			}
+			fmt.Println("binary")
+			for _, el := range file {
+				module.Binary(int(el))
+			}
+		}
 	case *huffman:
 		if *mot != "" {
 			fmt.Println(*mot)
-			fmt.Println(module.Huffman(*mot))
+			// fmt.Println()
+			r, f := module.Huffman(*mot)
+			module.WriteCompressedIntoFile(r, "sortie", f)
 		}
 	case *rle:
 		if *mot != "" {
@@ -52,5 +67,7 @@ func main() {
 		if *mot != "" && *position != 0 {
 			module.DecodeBWT(*mot, *position)
 		}
+	default:
+		module.DecodeBinary("1000")
 	}
 }

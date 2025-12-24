@@ -19,10 +19,15 @@ type Noeud struct {
 	Cote         int
 }
 
-func Huffman(mot string) string {
+func Huffman(mot string) (string ,map[string]string){
 	var symb []string
 	tab := strings.Split(mot, "")
 	var freqTab []Symbole
+	var arbreHuffman []Noeud
+	var originalNode []Noeud
+	var usedNode []Noeud
+	var f = make(map[string]string)
+
 	for _, symbole := range tab {
 		if !slices.Contains(symb, symbole) {
 			symb = append(symb, symbole)
@@ -45,9 +50,6 @@ func Huffman(mot string) string {
 	sort.Slice(freqTab, func(i, j int) bool {
 		return freqTab[i].Freq > freqTab[j].Freq
 	})
-	var arbreHuffman []Noeud
-	var originalNode []Noeud
-	var usedNode []Noeud
 
 	for _, element := range freqTab {
 		originalNode = append(originalNode, Noeud{
@@ -58,7 +60,6 @@ func Huffman(mot string) string {
 	nbr := 0
 	for len(arbreHuffman) > 1 {
 		nbr += 1
-
 		newNode := Noeud{
 			Symbole: Symbole{
 				Symb: strconv.Itoa(nbr),
@@ -71,7 +72,6 @@ func Huffman(mot string) string {
 		arbreHuffman[len(arbreHuffman)-1].Cote = 1
 		usedNode = append(usedNode, arbreHuffman[len(arbreHuffman)-2])
 		usedNode = append(usedNode, arbreHuffman[len(arbreHuffman)-1])
-
 		arbreHuffman = arbreHuffman[:len(arbreHuffman)-2]
 		arbreHuffman = append(arbreHuffman, newNode)
 		sort.Slice(arbreHuffman, func(i, j int) bool {
@@ -80,7 +80,7 @@ func Huffman(mot string) string {
 	}
 	racine := arbreHuffman[0]
 	usedNode = append(usedNode, racine)
-	var f = make(map[string]string)
+	
 	for _, n := range usedNode {
 		if _, err := strconv.Atoi(n.Symbole.Symb); err != nil {
 			codage := ""
@@ -93,12 +93,11 @@ func Huffman(mot string) string {
 		}
 	}
 	data := ""
-
 	for _, i := range tab {
 		data += f[i]
 	}
-	fmt.Println(data)
-	return data
+	fmt.Println("data", data)
+	return data, f
 }
 func GetCodage(element Noeud, usedNode []Noeud, codage *string) int {
 	if element.NoeudSuivant != "" {
@@ -113,4 +112,9 @@ func GetCodage(element Noeud, usedNode []Noeud, codage *string) int {
 		GetCodage(suivant, usedNode, codage)
 	}
 	return element.Cote
+}
+
+
+func DecodeHuffman(){
+	
 }

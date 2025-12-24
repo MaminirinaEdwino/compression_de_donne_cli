@@ -6,9 +6,9 @@ import (
 	"strconv"
 )
 
-func WriteCompressedIntoFile(huffmanBits string, filename string){
+func WriteCompressedIntoFile(huffmanBits string, filename string, f map[string]string) {
 
-	file, err := os.Create(filename+".huff")
+	file, err := os.Create(filename + ".huff")
 	if err != nil {
 		panic(err)
 	}
@@ -37,8 +37,17 @@ func WriteCompressedIntoFile(huffmanBits string, filename string){
 		val, _ := strconv.ParseUint(bitString, 2, 8)
 		bytes = append(bytes, byte(val))
 	}
-
-	// 3. Écrire les octets dans le fichier
+	codage, err := os.Create("codage.huff")
+	for i, v := range f {
+		_, err = codage.WriteString(i)
+		if err != nil {
+			fmt.Println("Erreur écriture:", err)
+		}
+		_, err = codage.WriteString(strconv.Itoa(DecodeBinary(v)))
+		if err != nil {
+			fmt.Println("Erreur écriture:", err)
+		}
+	}
 	_, err = file.Write(bytes)
 	if err != nil {
 		fmt.Println("Erreur écriture:", err)

@@ -2,6 +2,6 @@ package module
 
 func BwtHuffman(mot string) (string, int) {
 	res, pos := BWT(mot)
-
-	return Huffman(res), pos
+	hr, _ := Huffman(res)
+	return hr, pos
 }

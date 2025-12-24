@@ -19,6 +19,8 @@ func main() {
 	mot := flag.String("mot", "", "le mot a compressé")
 	readfile := flag.Bool("readfile", false, "read compressed file")
 	filename := flag.String("file", "", "filename")
+	decodeHuffman := flag.Bool("decodehuffman", false, "decode huffman")
+	sortie := flag.String()
 	flag.Parse()
 
 	file, err := os.Create("compression")

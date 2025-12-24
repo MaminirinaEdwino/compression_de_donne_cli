@@ -2,6 +2,7 @@ package module
 
 import (
 	"fmt"
+	"os"
 	"slices"
 	"sort"
 	"strconv"
@@ -19,7 +20,7 @@ type Noeud struct {
 	Cote         int
 }
 
-func Huffman(mot string) (string ,map[string]string){
+func Huffman(mot string) (string, map[string]string) {
 	var symb []string
 	tab := strings.Split(mot, "")
 	var freqTab []Symbole
@@ -80,7 +81,7 @@ func Huffman(mot string) (string ,map[string]string){
 	}
 	racine := arbreHuffman[0]
 	usedNode = append(usedNode, racine)
-	
+
 	for _, n := range usedNode {
 		if _, err := strconv.Atoi(n.Symbole.Symb); err != nil {
 			codage := ""
@@ -114,7 +115,32 @@ func GetCodage(element Noeud, usedNode []Noeud, codage *string) int {
 	return element.Cote
 }
 
+func DecodeHuffman(sortie string, codage string) {
+	sortieFichier, err := os.ReadFile(sortie)
+	if err != nil {
+		panic(err)
+	}
+	codageFichier, err := os.ReadFile(codage)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(sortieFichier))
+	fmt.Println(string(codageFichier))
 
-func DecodeHuffman(){
-	
+	cd := strings.Split(string(codageFichier), "")
+	symb := ""
+	code := ""
+	var cdg  = make(map[string]string)
+	for _, i := range cd {
+		_, err := strconv.Atoi(i)
+		if err != nil {
+			symb = i
+			if code != ""  {
+				cdg[symb] = code
+			}
+		}else{
+			code+=i
+		}
+	}
+	fmt.Println(cdg)
 }

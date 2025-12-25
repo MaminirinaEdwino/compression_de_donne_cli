@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func Binary(nombre int) {
+func ToBinary(nombre int) string {
 	result := ""
 	for nombre >= 2 {
 		// fmt.Print(nombre % 2)
@@ -16,9 +16,12 @@ func Binary(nombre int) {
 	}
 	result += fmt.Sprintf("%d", nombre%2)
 	result2 := strings.Split(result, "")
+	final := ""
 	for i := len(result); i > 0; i-- {
 		fmt.Print(result2[i-1])
+		final+=result2[i-1]
 	}
+	return final
 }
 
 func DecodeBinary(code string) int {

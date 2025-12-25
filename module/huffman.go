@@ -7,6 +7,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+
 )
 
 type Symbole struct {
@@ -130,21 +131,26 @@ func DecodeHuffman(sortie string, codage string) {
 	cd := strings.Split(string(codageFichier), "")
 	symb := ""
 	code := ""
-	fmt.Println(cd)
 	var cdg  = make(map[string]string)
 	for _, i := range cd {
-		fmt.Println(i)
+		
 		_, err := strconv.Atoi(i)
 		if err != nil {
-			symb = i
+			
 			if code != ""  {
-				cdg[symb] = code
+				val, _ := strconv.Atoi(code)
+				cdg[symb] = ToBinary(val)
 				code =""
 			}
-
+			symb = i
 		}else{
 			code+=i
 		}
 	}
-	fmt.Println(cdg)
+	val, _ := strconv.Atoi(code)
+	cdg[symb] = ToBinary(val)
+	// fmt.Println(cdg)
+	for k, value := range cdg {
+		fmt.Println(k, value)
+	}
 }

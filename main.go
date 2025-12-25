@@ -43,7 +43,7 @@ func main() {
 			}
 			fmt.Println("binary")
 			for _, el := range file {
-				module.Binary(int(el))
+				module.ToBinary(int(el))
 			}
 		}
 	case *huffman:

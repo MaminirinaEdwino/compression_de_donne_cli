@@ -20,7 +20,9 @@ func main() {
 	readfile := flag.Bool("readfile", false, "read compressed file")
 	filename := flag.String("file", "", "filename")
 	decodeHuffman := flag.Bool("decodehuffman", false, "decode huffman")
-	sortie := flag.String()
+	sortie := flag.String("sortie", "", "fichier de contenant les données compressées")
+	codage := flag.String("codage", "", "fichier contenant l'encodage des données")
+
 	flag.Parse()
 
 	file, err := os.Create("compression")
@@ -29,8 +31,12 @@ func main() {
 	}
 
 	switch {
+	case *decodeHuffman:
+		if *sortie != "" && *codage != "" {
+			module.DecodeHuffman(*sortie, *codage)
+		}
 	case *readfile:
-		if *filename != ""{
+		if *filename != "" {
 			file, err := os.ReadFile(*filename)
 			if err != nil {
 				panic(err)

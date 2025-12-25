@@ -130,14 +130,18 @@ func DecodeHuffman(sortie string, codage string) {
 	cd := strings.Split(string(codageFichier), "")
 	symb := ""
 	code := ""
+	fmt.Println(cd)
 	var cdg  = make(map[string]string)
 	for _, i := range cd {
+		fmt.Println(i)
 		_, err := strconv.Atoi(i)
 		if err != nil {
 			symb = i
 			if code != ""  {
 				cdg[symb] = code
+				code =""
 			}
+
 		}else{
 			code+=i
 		}

@@ -7,7 +7,6 @@ import (
 	"sort"
 	"strconv"
 	"strings"
-
 )
 
 type Symbole struct {
@@ -98,7 +97,7 @@ func Huffman(mot string) (string, map[string]string) {
 	for _, i := range tab {
 		data += f[i]
 	}
-	fmt.Println("data", data)
+	fmt.Println("data", f)
 	return data, f
 }
 func GetCodage(element Noeud, usedNode []Noeud, codage *string) int {
@@ -125,32 +124,32 @@ func DecodeHuffman(sortie string, codage string) {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(string(sortieFichier))
-	fmt.Println(string(codageFichier))
-
-	cd := strings.Split(string(codageFichier), "")
-	symb := ""
-	code := ""
-	var cdg  = make(map[string]string)
+	cd := strings.Split(string(codageFichier), "\n")
+	
+	cdg := make(map[string]string)
 	for _, i := range cd {
-		
-		_, err := strconv.Atoi(i)
-		if err != nil {
-			
-			if code != ""  {
-				val, _ := strconv.Atoi(code)
-				cdg[symb] = ToBinary(val)
-				code =""
+		str := strings.Split(i, "")
+		if len(str)>0 {
+			cdg[str[0]] = strings.Join(str[1:], "")
+		} 
+	}
+	fmt.Println(cdg)
+	contenuFichier := ""
+	for _, i := range sortieFichier{
+		contenuFichier+=ToBinary(int(i))
+	}
+	code := strings.Split(contenuFichier, "")
+	used := ""
+	for _ ,i := range code{
+		used+=i
+		for k, cod := range cdg {
+			// fmt.Println(used)
+			if used == cod {
+				// fmt.Println(used)
+				fmt.Println(k)
+				used = ""
 			}
-			symb = i
-		}else{
-			code+=i
 		}
 	}
-	val, _ := strconv.Atoi(code)
-	cdg[symb] = ToBinary(val)
-	// fmt.Println(cdg)
-	for k, value := range cdg {
-		fmt.Println(k, value)
-	}
+
 }

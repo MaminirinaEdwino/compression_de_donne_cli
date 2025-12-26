@@ -43,7 +43,7 @@ func WriteCompressedIntoFile(huffmanBits string, filename string, f map[string]s
 		if err != nil {
 			fmt.Println("Erreur écriture:", err)
 		}
-		_, err = codage.WriteString(strconv.Itoa(DecodeBinary(v)))
+		_, err = codage.WriteString(v+"\n")
 		if err != nil {
 			fmt.Println("Erreur écriture:", err)
 		}
